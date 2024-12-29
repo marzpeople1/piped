@@ -7,8 +7,7 @@ describe("Add person automation", () => {
         cy.intercept({ resourceType: /xhr|fetch/ }, { log: false })
 
         cy.loginToPortal()
-        cy.visit(contacts.getContactsUrl())
-
+        contacts.getContactsUrl().then(url => cy.visit(url))
         cy.log('User navigates to Contacts')
         contacts.pageTitleHeader().should('have.text', 'Contacts')
     })

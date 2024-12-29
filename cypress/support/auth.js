@@ -1,5 +1,5 @@
 const url = Cypress.config().baseUrl
-const userSelfUrl = "https://personal4.pipedrive.com/api/v1/fe-navigation-api/user-self"
+const userSelfUrl = "https://domain.pipedrive.com/api/v1/fe-navigation-api/user-self"
 
 // Returns pipe-verify cookie
 const getPipeVerify = () =>
@@ -15,13 +15,18 @@ const getPipeVerify = () =>
             cy.wrap(cookie[0].split(';')[0].split('=')[1])
         })
 
-const verifyLoggedIn = () => cy.request(userSelfUrl)
+const verifyLoggedIn = () => cy.fixture('user.json')
+    .then(({adminUser}) => {
+        const selfUrl = userSelfUrl.replace('domain', adminUser["companyDomain"])
+        cy.request(selfUrl)
+    })
+
 
 // Authenticates to Pipedrive via API
 const authApi = () => {
     cy.fixture('user')
         .then(({adminUser}) => {
-            const {email, pass, hash} = adminUser
+            const {email, pass} = adminUser
 
             cy.log(`Auth to Pipedrive as ${email}`)
 
@@ -36,7 +41,6 @@ const authApi = () => {
                         body: {
                             login: email,
                             password: pass,
-                            hash,
                             "pipe-verify": pipeVerify
                         }, })
                         .its('status')

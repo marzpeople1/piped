@@ -1,5 +1,5 @@
 class contactsPage {
-    url = "https://personal4.pipedrive.com/persons/list/user/everyone"
+    url = "https://domain.pipedrive.com/persons/list/user/everyone"
 
     titleSelector = ".fe-root-Breadcrumbs > .fe-root-Breadcrumbs__parent-title"
     plusBtnSelector = "[data-test='addButton-button'] > button.cui5-button-group-item--first-child"
@@ -7,7 +7,10 @@ class contactsPage {
     xAddPersonBtn = "div.cui5-compound-modal__wrap > header > button.cui5-compound-modal__close"
     addPersonModalTitleSelector = "div.cui5-compound-modal__wrap > header > [title='Add person']"
 
-    getContactsUrl = () => { return this.url}
+    getContactsUrl = () => cy.fixture('user.json')
+        .then(({adminUser}) => {
+            return this.url.replace('domain', adminUser["companyDomain"])
+        })
 
     pageTitleHeader = () => cy.get(this.titleSelector)
 

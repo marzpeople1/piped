@@ -1,7 +1,7 @@
 {
   "adminUser": {
-    "email": "",
-    "pass": "",
-    "hash": "6814ee95ef0254f514c9544b8075e886"
+    "email": "ec.test.auto@gmail.com",
+    "pass": "testauto",
+    "companyDomain": "ectest"
   }
 }
