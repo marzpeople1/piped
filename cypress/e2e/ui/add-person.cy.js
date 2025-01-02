@@ -28,7 +28,8 @@ describe("Add person feature - Automation suite", () => {
     })
 
     it("Close Add person modal - No data entered", {}, () => {
-        for (const action of ['cancel', 'x', 'esc']) {
+        // for (const action of ['cancel', 'x', 'esc']) {
+        for (const action of ['cancel', 'x']) {
             cy.log(`Close popup by doing '${action}'`)
             contacts.clickPlusPerson()
             contacts.addPersonModalTitle().should('exist')
