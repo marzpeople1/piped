@@ -12,3 +12,9 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           browser: chrome
+      - name: Screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+          if-no-files-found: ignore
