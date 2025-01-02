@@ -12,9 +12,16 @@ describe("Add person feature - Automation suite", () => {
         contacts.getContactsUrl().then(url => cy.visit(url))
         cy.log('User navigates to Contacts')
         contacts.pageTitleHeader().should('have.text', 'Contacts')
+
+        // Map of (header, position) entries is used to validate new person attributes
+        contacts.mapGridHeaders()
     })
 
-    it("Close Add person modal - No data entered", () => {
+    it.only("Map headers", () => {
+        cy.get('@gridMap')
+    })
+
+    it("Close Add person modal - No data entered", {}, () => {
         for (const action of ['cancel', 'x', 'esc']) {
             cy.log(`Close popup by doing '${action}'`)
             contacts.clickPlusPerson()
@@ -40,14 +47,17 @@ describe("Add person feature - Automation suite", () => {
         contacts.addPersonModalTitle().should('not.exist')
     })
 
-    it("Add new person - Required fields", () => {
+    it("Add new person - Required fields",() => {
         const personName = "Auto required - " + randomizeString(5)
         const successMsg = `New person "${personName}" created`
         contacts.clickPlusPerson()
         contacts.addPersonModalTitle().should('exist')
+
         contacts.fillOutForm({name: personName})
         contacts.clickSavePerson()
         contacts.getSnackbarMsg().should('eq', successMsg)
+
+
     })
 
     it("Add new person - All fields", () => {

@@ -1,5 +1,6 @@
 class contactsPage {
     url = "https://domain.pipedrive.com/persons/list/user/everyone"
+    personSummaryUrl = "https://domain.pipedrive.com/api/v1/persons/summary"
 
     titleSelector = ".fe-root-Breadcrumbs > .fe-root-Breadcrumbs__parent-title"
     plusBtnSelector = "[data-test='addButton-button'] > button.cui5-button-group-item--first-child"
@@ -17,6 +18,8 @@ class contactsPage {
     addLabelDropdownSelector = "[data-testid='labels-select']"
     popoverLabelSelector = "div[data-testid='labels-option-badge'] span.cui5-label__content"
     snackbarMsgSelector = "div[data-test='snackbar-queue-item'] p.cui5-snackbar__message"
+    peopleCountSelector = "span[data-test='list-summary']"
+    gridHeaderRowSelector = "div.grid__header table.gridHeader__table tr.gridHeader__row > th.gridHeader__cell"
 
     getContactsUrl = () => cy.fixture('user.json')
         .then(({adminUser}) => {
@@ -83,6 +86,53 @@ class contactsPage {
         } else {
             cy.log('Invalid payload - Name is a required field')
         }
+    }
+
+    // Creates an 'gridMap' alias containing header names and their position within the column arrangement
+    mapGridHeaders = () => {
+        let map = {}
+
+        cy.fixture('user.json').then(({adminUser}) => {
+            const endpoint = this.personSummaryUrl.replace('domain', adminUser["companyDomain"])
+            cy.intercept({method: "GET", url: `${endpoint}**`}).as('countResponse')
+        })
+
+        cy.wait('@countResponse')
+            .then(({response}) => {
+                if (response.body) {
+                    const {success, data} = response.body
+                    const totalCount = data["total_count"]
+                    expect(success).to.be.true
+                    cy.log(`${totalCount} contacts found`)
+
+                    // Check count verbiage
+                    cy.get(this.peopleCountSelector)
+                        .invoke('text')
+                        .invoke('split', ' ')
+                        .should(arr => {
+                            expect(arr[0], "Check total count").to.eq(totalCount.toString())
+                            expect(['person', 'people'], "Check person/people").to.include(arr[1])
+                        })
+
+                    cy.get(this.gridHeaderRowSelector)
+                        .should('have.length.gt', 0)
+                        .each((th, idx) => {
+                            const dataField = th.attr('data-field')
+                            if (dataField) {
+                                map = {
+                                    ...map,
+                                    [dataField]: {
+                                        idx,
+                                        label: th.text().trim()
+                                    }
+                                }
+                            } else {
+                                cy.log('Failed to load data-field for idx=' + idx, 'th: ' + th)
+                            }
+                        })
+                }
+            })
+            .then(() => cy.wrap(map).as('gridMap') )
     }
 }
 
