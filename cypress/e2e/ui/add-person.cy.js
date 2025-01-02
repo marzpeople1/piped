@@ -1,8 +1,18 @@
 import {default  as contacts} from "../../support/pom/contactsPage"
 import {randomizeString} from "../../support/supportFunctions";
 
-
 describe("Add person feature - Automation suite", () => {
+
+    const addPersonWrapper = (name, optionalAttrs) => {
+        const payload = { name, ...optionalAttrs }
+
+        contacts.clickPlusPerson()
+        contacts.addPersonModalTitle().should('exist')
+        contacts.fillOutForm(payload)
+        contacts.clickSavePerson()
+        contacts.validateSnackbarMsg(name)
+        contacts.validatePerson(payload)
+    }
 
     beforeEach("", () => {
         // Suppresses xhr/fetch logs
@@ -15,10 +25,6 @@ describe("Add person feature - Automation suite", () => {
 
         // Map of (header, position) entries is used to validate new person attributes
         contacts.mapGridHeaders()
-    })
-
-    it.only("Map headers", () => {
-        cy.get('@gridMap')
     })
 
     it("Close Add person modal - No data entered", {}, () => {
@@ -48,30 +54,17 @@ describe("Add person feature - Automation suite", () => {
     })
 
     it("Add new person - Required fields",() => {
-        const personName = "Auto required - " + randomizeString(5)
-        const successMsg = `New person "${personName}" created`
-        contacts.clickPlusPerson()
-        contacts.addPersonModalTitle().should('exist')
-
-        contacts.fillOutForm({name: personName})
-        contacts.clickSavePerson()
-        contacts.getSnackbarMsg().should('eq', successMsg)
-
-
+        addPersonWrapper("Auto required - " + randomizeString(10))
     })
 
     it("Add new person - All fields", () => {
-        contacts.clickPlusPerson()
-        contacts.addPersonModalTitle().should('exist')
-
-        contacts.fillOutForm({
-            name: "Auto optional - " + randomizeString(5),
-            organization: "Auto org",
-            phone: 123,
-            email: 'auto@domain.com',
-            label: 'hot lead'
-        })
-
-        contacts.clickSavePerson()
+        const name = "Auto optional - " + randomizeString(10)
+        const optional = {
+            org_id: "Auto org",
+            phone: "37288886666",
+            email: "test1@domain.com",
+            label_ids: 'Hot lead'
+        }
+        addPersonWrapper(name, optional)
     })
 })

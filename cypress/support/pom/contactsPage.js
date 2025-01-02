@@ -20,6 +20,8 @@ class contactsPage {
     snackbarMsgSelector = "div[data-test='snackbar-queue-item'] p.cui5-snackbar__message"
     peopleCountSelector = "span[data-test='list-summary']"
     gridHeaderRowSelector = "div.grid__header table.gridHeader__table tr.gridHeader__row > th.gridHeader__cell"
+    gridCellByDataField= "td.gridRow__cell[data-field='dataField']"
+    phoneNumberButtonSelector = "a[data-test='phone-number-button']"
 
     getContactsUrl = () => cy.fixture('user.json')
         .then(({adminUser}) => {
@@ -66,16 +68,20 @@ class contactsPage {
         cy.get('@pickLabel').click({force: true})
     }
 
-    getSnackbarMsg = () => cy.get(this.snackbarMsgSelector).invoke('text')
+    validateSnackbarMsg = name => {
+        const successMsg = `New person "${name}" created`
+        cy.log('Validate toast message', successMsg)
+        cy.get(this.snackbarMsgSelector).invoke('text').should('eq', successMsg)
+    }
 
     fillOutForm = payload => {
         if (payload.name) {
             const setAttrMap = {
                 name: this.setPersonName,
-                organization: this.setOrganization,
+                org_id: this.setOrganization,
                 phone: this.setPhone,
                 email: this.setEmail,
-                label: this.setLabel,
+                label_ids: this.setLabel,
             }
 
             for (const attr in payload) {
@@ -133,6 +139,75 @@ class contactsPage {
                 }
             })
             .then(() => cy.wrap(map).as('gridMap') )
+    }
+
+    // Note: Needs to be run once mapGridHeaders has been called
+    validatePerson = (payload, newPerson=true) => {
+        let map = {}
+        const nameSelector = this.gridCellByDataField.replace('dataField', 'name')
+        const mainSelector = newPerson ? nameSelector + ' a' : nameSelector
+        const { name } = payload
+
+        cy.get('@gridMap').then(gridMap => map = gridMap)
+
+        cy.get(mainSelector).contains(name).then(td => {
+            cy.wrap(td).parents('tr').within(tr => {
+                for (const attr in payload) {
+                    const selector = attr === 'name' ?
+                        mainSelector : this.gridCellByDataField
+                            .replace('dataField', attr)
+
+                    cy.wrap(tr, {log: false}).find(selector)
+                        .then(cell => {
+                            const expected = payload[attr].toString()
+                            const msg = `Verify <b>${map[attr].label}</b> is "${expected}"`
+                            const badgeMsg = "Verify NEW badge has been placed"
+                            let actual = cell.text().trim()
+
+                            switch (attr) {
+                                case 'email':
+                                    const addressList = actual
+                                        .replace('(Home)', ' ')
+                                        .replace('(Work)', ' ')
+                                        .replace('(Other)', ' ')
+                                        .trim()
+                                    expect(expected.replaceAll(',', ' '), msg).to.eq(addressList)
+                                    break;
+                                case 'phone':
+                                    let nbrList = []
+                                    cy.wrap(cell)
+                                        .find(this.phoneNumberButtonSelector)
+                                        .each(phoneNbr => {
+                                            nbrList.push(phoneNbr.text())
+                                        })
+
+                                    cy.then(() => {
+                                        expect(expected.replaceAll(',', ' '), msg)
+                                            .to.eq(nbrList.toString().replaceAll(',', ' '))
+                                    })
+                                    break
+                                case 'label_ids':
+                                    expect(expected.toUpperCase(), msg).to.eq(actual.toUpperCase())
+                                    break;
+                                default:
+                                    expect(expected, msg).to.eq(actual)
+                            }
+
+                            if (attr === 'name') {
+                                cy.wrap(cell)
+                                    .parents('div.value')
+                                    .find("span.badge")
+                                    .invoke('text')
+                                    .invoke('toUpperCase')
+                                    .then(txt => expect(txt, badgeMsg).to.eq('NEW'))
+
+                            }
+                        })
+
+                }
+            })
+        })
+
     }
 }
 
