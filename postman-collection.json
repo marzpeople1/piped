@@ -1,0 +1,459 @@
+{
+	"info": {
+		"_postman_id": "b49d407d-b096-4c90-a27c-ea4b07a75d3d",
+		"name": "Pipep",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7118983"
+	},
+	"item": [
+		{
+			"name": "1. Get pipe-verify",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const companyDomain = \"ectest\"",
+							"const login = \"ec.test.auto@gmail.com\"",
+							"const password = \"testauto\"",
+							"",
+							"// Setting collection variables",
+							"pm.collectionVariables.set('companyDomain', companyDomain)",
+							"pm.collectionVariables.set('login', login)",
+							"pm.collectionVariables.set('password', password)",
+							"",
+							"pm.test('Check pipe-verify is received', () => {",
+							"    pm.response.to.have.status(200)",
+							"    ",
+							"    const pipeVerify = pm.cookies.get('pipe-verify')",
+							"",
+							"    pm.expect(pipeVerify === undefined).to.false",
+							"    pm.collectionVariables.set('pipeVerify', pipeVerify)",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const randomizeString = len => {",
+							"    const charCollection = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'",
+							"    let out = ''",
+							"    let it = 0",
+							"",
+							"    while (it < len) {",
+							"        out += charCollection.charAt(Math.floor(Math.random() * charCollection.length))",
+							"        it += 1",
+							"    }",
+							"",
+							"    return out",
+							"}",
+							"",
+							"pm.collectionVariables.set(\"randomizeString\", randomizeString.toString())"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br, zstd",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Content-length",
+						"value": "132",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Cache-control",
+						"value": "max-age=0",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Content-type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Cookie",
+						"value": "pd_segment_session_id=3db9b1c7-282e-4d95-ad9c-ead635484995; ajs_user_id=13788600:22734828; ajs_anonymous_id=25fd01f9-e50f-4306-ab63-74e8cdf1ea8e; analytics_session_id=1735387122562; intercom-id-hqausqan=59476465-1ed2-4eb8-9b06-fec7d3a806b3; intercom-device-id-hqausqan=eaeb2646-38ba-4423-ac1c-9b2462ab6df9; OptanonAlertBoxClosed=2024-12-28T12:08:08.852Z; device_id=sdz4yOKVShbEJvNtHLJ3PFcA; has_account=1; pd_account=%7B%22hashedId%22%3A%22f844f7000b89bed264e55f90c6c62807%22%2C%22hashedEmail%22%3A%22f6d15672685b911bb4984a0b51f0f055%22%2C%22is_paying%22%3Afalse%7D; __cf_bm=grF7UU1IOhkRaZ2.mpxs6k5FYdOqN6ejwls.Eq2HSIw-1735389618-1.0.1.1-ZW.SAcVsDAwYnS_2LLlcyIFF7Hyer6ns4p5P3EgzmRW0eYGrRtlvDVDaZUOgLm7yKtbGLnHBOi_Ng91i1Sha_g; last_user_id=v1u%3AAQIBAHjUDFVAIMxJPcvYF5rnWeuNVkVUlHs3lGYhk9_Si1Q-YAGZlGpEFzZlLrKJOZb9_AbBAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMGmOY1zRzU2gWBCFTAgEQgDsI4NuEAhHP_LfRonhs7H3uxSZ8d1aemC8kRPQIjIZ72GoO2aLth_AEDHBoR54dMFzJyJpS6Ixm1k6IcA%3A8QGQ6qlXFRibBoz7AbXnMHW2YnMki5smu2vj182se2YUy_Pd-WmWf-d8InOvCilFqUrk2aNN4zHQLHCBvseHarNjFMfm5KEu8Q; apt.uid=AP-3BTJMW1NDKH3-2-1735389761194-97323727.0.0; apt.sid=AP-3BTJMW1NDKH3-2-1735389761194-71925488; pipe-last-active=1735389761284; OptanonConsent=consentId=fe508887-bea8-4fc6-8184-9cdea9c9c371&datestamp=Sat+Dec+28+2024+14%3A42%3A41+GMT%2B0200+(Eastern+European+Standard+Time)&version=202409.1.0&interactionCount=1&isAnonUser=1&isGpcEnabled=0&browserGpcFlag=0&isIABGlobal=false&hosts=&landingPath=NotLandingPage&groups=C0002%3A0%2CC0004%3A0%2CC0003%3A0%2CC0001%3A1&intType=2&geolocation=EE%3B37&AwaitingReconsent=false; pipe-verify=1SH3-RAGdjCLJZraPHeH; analytics_session_id.last_access=1735390345447; intercom-session-hqausqan=bVB5R2xEV1l3aDRDcWRYQ2V6N3JzblFTQjl5TURtZ3J3bzRRZmZmSEFNNzNCNEswRTdFS1daaGhoOFl1U05iMy0tUWVsUGd1YVE3enVNTUhDYys3aFdBZz09--f4c3f958b3ee3984eebf9f426428a8d3baf27589",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "authority",
+						"value": "app.pipedrive.com",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://app.pipedrive.com/auth/login",
+					"protocol": "https",
+					"host": [
+						"app",
+						"pipedrive",
+						"com"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2. Login",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const assertSession = (loggedInExpected = true) => {",
+							"    pm.sendRequest({",
+							"        url: `https://${pm.collectionVariables.get('companyDomain')}.pipedrive.com/api/v1/fe-navigation-api/user-self`,",
+							"        method: 'GET',",
+							"        }, (err, res) => {",
+							"            const email = pm.collectionVariables.get('login')",
+							"            pm.expect(err).to.be.null",
+							"",
+							"            if (loggedInExpected) {",
+							"                pm.expect(res).to.have.property('code', 200);",
+							"                pm.expect(res).to.have.property('status', 'OK');",
+							"                pm.expect(res.json().data.user.email).to.eq(email)",
+							"            } else {",
+							"                pm.expect(res).to.have.property('code', 401);",
+							"                pm.expect(res).to.have.property('status', 'Unauthorized');",
+							"                pm.expect(res.json().error).to.eq(\"unauthorized access\")",
+							"            }",
+							"        })",
+							"    }",
+							"",
+							"pm.collectionVariables.set(\"assertSession\", assertSession.toString())"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const sessionToken = pm.cookies.get('pipe-session-token')",
+							"",
+							"pm.test('Check session token is set', () => {    ",
+							"    pm.response.to.have.status(200)",
+							"    pm.expect(sessionToken === undefined).to.false",
+							"    pm.collectionVariables.set('sessionToken', sessionToken)",
+							"})",
+							"",
+							"pm.test(`Check ${pm.collectionVariables.get('login')} is logged in`, () => {",
+							"    eval(pm.collectionVariables.get(\"assertSession\"))()",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br, zstd",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Content-length",
+						"value": "132",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Cache-control",
+						"value": "max-age=0",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Content-type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Cookie",
+						"value": "pd_segment_session_id=3db9b1c7-282e-4d95-ad9c-ead635484995; ajs_user_id=13788600:22734828; ajs_anonymous_id=25fd01f9-e50f-4306-ab63-74e8cdf1ea8e; analytics_session_id=1735387122562; intercom-id-hqausqan=59476465-1ed2-4eb8-9b06-fec7d3a806b3; intercom-device-id-hqausqan=eaeb2646-38ba-4423-ac1c-9b2462ab6df9; OptanonAlertBoxClosed=2024-12-28T12:08:08.852Z; device_id=sdz4yOKVShbEJvNtHLJ3PFcA; has_account=1; pd_account=%7B%22hashedId%22%3A%22f844f7000b89bed264e55f90c6c62807%22%2C%22hashedEmail%22%3A%22f6d15672685b911bb4984a0b51f0f055%22%2C%22is_paying%22%3Afalse%7D; __cf_bm=grF7UU1IOhkRaZ2.mpxs6k5FYdOqN6ejwls.Eq2HSIw-1735389618-1.0.1.1-ZW.SAcVsDAwYnS_2LLlcyIFF7Hyer6ns4p5P3EgzmRW0eYGrRtlvDVDaZUOgLm7yKtbGLnHBOi_Ng91i1Sha_g; last_user_id=v1u%3AAQIBAHjUDFVAIMxJPcvYF5rnWeuNVkVUlHs3lGYhk9_Si1Q-YAGZlGpEFzZlLrKJOZb9_AbBAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMGmOY1zRzU2gWBCFTAgEQgDsI4NuEAhHP_LfRonhs7H3uxSZ8d1aemC8kRPQIjIZ72GoO2aLth_AEDHBoR54dMFzJyJpS6Ixm1k6IcA%3A8QGQ6qlXFRibBoz7AbXnMHW2YnMki5smu2vj182se2YUy_Pd-WmWf-d8InOvCilFqUrk2aNN4zHQLHCBvseHarNjFMfm5KEu8Q; apt.uid=AP-3BTJMW1NDKH3-2-1735389761194-97323727.0.0; apt.sid=AP-3BTJMW1NDKH3-2-1735389761194-71925488; pipe-last-active=1735389761284; OptanonConsent=consentId=fe508887-bea8-4fc6-8184-9cdea9c9c371&datestamp=Sat+Dec+28+2024+14%3A42%3A41+GMT%2B0200+(Eastern+European+Standard+Time)&version=202409.1.0&interactionCount=1&isAnonUser=1&isGpcEnabled=0&browserGpcFlag=0&isIABGlobal=false&hosts=&landingPath=NotLandingPage&groups=C0002%3A0%2CC0004%3A0%2CC0003%3A0%2CC0001%3A1&intType=2&geolocation=EE%3B37&AwaitingReconsent=false; pipe-verify=1SH3-RAGdjCLJZraPHeH; analytics_session_id.last_access=1735390345447; intercom-session-hqausqan=bVB5R2xEV1l3aDRDcWRYQ2V6N3JzblFTQjl5TURtZ3J3bzRRZmZmSEFNNzNCNEswRTdFS1daaGhoOFl1U05iMy0tUWVsUGd1YVE3enVNTUhDYys3aFdBZz09--f4c3f958b3ee3984eebf9f426428a8d3baf27589",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "authority",
+						"value": "app.pipedrive.com",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "login",
+							"value": "{{login}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "text"
+						},
+						{
+							"key": "pipe-verify",
+							"value": "{{pipeVerify}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://app.pipedrive.com/auth/login",
+					"protocol": "https",
+					"host": [
+						"app",
+						"pipedrive",
+						"com"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3. Add person",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const body = JSON.parse(pm.collectionVariables.get('personPayload'))",
+							"",
+							"const assertPayload = data => {",
+							"    for (const attr in body) {",
+							"        const expected = body[attr]",
+							"        const actual = data[attr]",
+							"        const msg1 = `Check ${attr} has been set`",
+							"        const msg2 = `Check ${attr} = \"${expected}\"`",
+							"",
+							"        pm.expect(actual, msg1).to.exist",
+							"",
+							"        if (['phone', 'email'].includes(attr)) {",
+							"            pm.expect(expected.length).to.eq(actual.length)",
+							"            for (const entryIdx in expected) {",
+							"                pm.expect(expected[entryIdx].value).to.eq(actual[entryIdx].value)",
+							"            }",
+							"        } else {",
+							"            if ([typeof(actual), typeof(expected)].includes(\"number\")) {",
+							"                pm.expect(expected.toString(), msg2).to.eq(actual.toString())",
+							"            } else {",
+							"                pm.expect(expected, msg2).to.eq(actual)",
+							"            }",
+							"        }",
+							"",
+							"        console.log(`'${attr}' matches value in request`)",
+							"    }",
+							"}",
+							"",
+							"pm.test(`Check \"${body[\"name\"]}\" person has been created`, () => {    ",
+							"    pm.response.to.have.status(201)",
+							"    ",
+							"    const {success, data} = pm.response.json()",
+							"    pm.expect(success).to.be.true",
+							"    assertPayload(data)",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const personPayload = {",
+							"    name: `API Test - ${eval(pm.collectionVariables.get(\"randomizeString\"))(6)}`,",
+							"    phone: [{ \"value\": \"37288886666\" }],",
+							"    email: [",
+							"        { \"value\": \"test1@domain.com\" },",
+							"        { \"value\": \"autotest2@another.eu\" }",
+							"    ],",
+							"    visible_to: 3",
+							"}",
+							"",
+							"pm.collectionVariables.set('personPayload', JSON.stringify(personPayload))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{{personPayload}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{companyDomain}}.pipedrive.com/api/v1/persons?session_token={{sessionToken}}&strict_mode=true",
+					"protocol": "https",
+					"host": [
+						"{{companyDomain}}",
+						"pipedrive",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"persons"
+					],
+					"query": [
+						{
+							"key": "session_token",
+							"value": "{{sessionToken}}"
+						},
+						{
+							"key": "strict_mode",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4. Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(`Check logged out successfully`, () => {",
+							"    pm.response.to.have.status(200)",
+							"    eval(pm.collectionVariables.get(\"assertSession\"))(loggedInExpected=false)",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"followRedirects": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{companyDomain}}.pipedrive.com/auth/logout",
+					"protocol": "https",
+					"host": [
+						"{{companyDomain}}",
+						"pipedrive",
+						"com"
+					],
+					"path": [
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "companyDomain",
+			"value": ""
+		},
+		{
+			"key": "assertLoggedIn",
+			"value": ""
+		},
+		{
+			"key": "login",
+			"value": ""
+		},
+		{
+			"key": "password",
+			"value": ""
+		},
+		{
+			"key": "pipeVerify",
+			"value": ""
+		},
+		{
+			"key": "assertSession",
+			"value": ""
+		},
+		{
+			"key": "sessionToken",
+			"value": ""
+		},
+		{
+			"key": "personName",
+			"value": ""
+		},
+		{
+			"key": "personPayload",
+			"value": ""
+		},
+		{
+			"key": "randomizeString",
+			"value": ""
+		}
+	]
+}
