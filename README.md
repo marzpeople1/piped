@@ -44,3 +44,26 @@ To achieve this, go to Scripts => Post-response, and update `login`, `password` 
 and Run order shows the correct sequence (from 1 to 4) 
 4. On the right pane, select the Functional tab, then choose Run manually
 5. Finally, run the collection by clicking on **Run Pipep**
+
+# Running on a Docker container
+`/Dockerfile` outlines basic instructions to enable Cypress Dockerization. In other words, it allows
+building/running tests within a Docker container.
+
+## Precondition
+Docker has been installed in the local machine. Visit https://www.docker.com/ for additional info.
+
+## Steps
+1. Open a CMD/Terminal window. Navigate to the root folder and build a docker image:
+`docker build -t piped .`
+2. Verify the newly created container is correct: `docker images` 
+(a "piped" image should be displayed under REPOSITORY)
+
+3. Run the test suite on that image. There are two ways available:
+   1) Run without generating screenshots/videos: `docker run -it --rm piped npm run cy:docker`
+   2) Expensive execution that records a video of the entire run, and triggers screenshots on failures, if any:
+   - **Command Prompt (Windows)**: `docker run -it --rm -v %cd%/cypress:/app/cypress -v %cd%/cypress/videos:/app/cypress/videos -v %cd%/cypress/screenshots:/app/cypress/screenshots piped npm run cy:docker`
+   - **Terminal (macOS)**: `docker run -it --rm -v $(pwd)/cypress:/app/cypress -v $(pwd)/cypress/videos:/app/cypress/videos -v $(pwd)/cypress/screenshots:/app/cypress/screenshots piped npm run cy:docker`
+> **Note 1**: The method of referencing the current directory depends on the OS as well as the type of command line being used. That's
+> why there are two versions of the above command, i.e., `%cd%` vs `$(pwd)`
+
+> **Note 2**: When running & recording video & screenshots, new files will be generated in `/cypress/videos` and `/cypress/screenshots` respectively.

@@ -103,7 +103,7 @@ class contactsPage {
             cy.intercept({method: "GET", url: `${endpoint}**`}).as('countResponse')
         })
 
-        cy.wait('@countResponse')
+        cy.wait('@countResponse', {timeout: 6000})
             .then(({response}) => {
                 if (response.body) {
                     const {success, data} = response.body

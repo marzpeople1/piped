@@ -7,6 +7,10 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
+    // defaultCommandTimeout: 6000,
+    // pageLoadTimeout: 70000,
     baseUrl: 'https://app.pipedrive.com/auth/login',
+    video: true,
+    screenshotOnRunFailure: true
   },
 });

@@ -3,6 +3,8 @@
     "cypress": "^13.17.0"
   },
   "scripts": {
-    "cy:test": "cypress run --no-exit --headed --spec cypress/e2e/ui/add-person.cy.js"
+    "cy:test": "cypress run --no-exit --headed --spec cypress/e2e/ui/add-person.cy.js",
+    "cy:test-exit": "cypress run --headed --spec cypress/e2e/ui/add-person.cy.js",
+    "cy:docker": "cypress run --headed --spec cypress/e2e/ui/add-person.cy.js --env host=docker"
   }
 }

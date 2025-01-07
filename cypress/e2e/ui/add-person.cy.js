@@ -2,7 +2,7 @@ import {default  as contacts} from "../../support/pom/contactsPage"
 import {randomizeString} from "../../support/supportFunctions";
 
 describe("Add person feature - Automation suite", () => {
-
+    let docker
     const addPersonWrapper = (name, optionalAttrs) => {
         const payload = { name, ...optionalAttrs }
 
@@ -14,7 +14,11 @@ describe("Add person feature - Automation suite", () => {
         contacts.validatePerson(payload)
     }
 
-    beforeEach("", () => {
+    before("Read run type (host)", () => {
+        docker = Cypress.env().host && Cypress.env().host === 'docker' ? '[docker] ' : ''
+    })
+
+    beforeEach("Ensure Login to Pipedrive", () => {
         // Suppresses xhr/fetch logs
         cy.intercept({ resourceType: /xhr|fetch/ }, { log: false })
 
@@ -55,11 +59,11 @@ describe("Add person feature - Automation suite", () => {
     })
 
     it("Add new person - Required fields",() => {
-        addPersonWrapper("Auto required - " + randomizeString(10))
+        addPersonWrapper(`${docker}Auto required - ${randomizeString(10)}`)
     })
 
     it("Add new person - All fields", () => {
-        const name = "Auto optional - " + randomizeString(10)
+        const name = `${docker}Auto optional - ${randomizeString(10)}`
         const optional = {
             org_id: "Auto org",
             phone: "37288886666",
